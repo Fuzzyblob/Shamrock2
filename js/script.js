@@ -127,4 +127,36 @@ $(window).load(function(){
 		image.parentNode.insertBefore(canvas,image);
 	}
 	
+	
+	
+	
+	function getPage(href, title, push) {
+		$.ajax(href).done(function(data) {
+			$('#mainContent').replaceWith($(data).find('#mainContent'));
+			document.title = title;
+			if(push) {
+				history.pushState({title:title, href: href}, title, href);
+			}
+		});
+	}
+
+	$('header nav a').click(function() {
+		if (window.history && window.history.pushState) {
+			getPage(this.attributes.href.value, $(this).text(), true)
+			return false;
+		}
+		return true;
+	});
+	window.onpopstate = function(event) {
+		if(event.state) {
+			getPage(event.state.href, event.state.title);
+		}
+	}
+	
+	
+	
+	
+	
 });
+
+
